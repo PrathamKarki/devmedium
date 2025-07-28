@@ -4,7 +4,9 @@ import Link from 'next/link'
 const Footer = () => {
   return (
    <>
-     <footer className='footer w-[80%] max-w-7xl mx-auto py-6'>
+
+<footer className='border-t-1'>
+     <div className='footer w-[80%] max-w-7xl mx-auto py-6 '>
         <div className='flex items-center justify-center '>
             <ul className='flex gap-5'>
                 <li><Link href='/'>Help</Link></li>
@@ -15,7 +17,8 @@ const Footer = () => {
             </ul>
         </div>
 
-     </footer>
+     </div>
+</footer>
    </>
   )
 }
