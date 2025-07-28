@@ -14,8 +14,8 @@ const  Navbar = () => {
                     <ul className="flex gap-10 justify-between text-sm text-[#242424]">
                         <li className="hidden md:block"><Link href='/'>Our Story</Link></li>
                         <li className="hidden md:block"><Link href="/">Write</Link></li>
-                        <li><Link href="/"> Sign in</Link></li>
-                        <li><Link href="/">Register</Link></li>
+                        <li><Link href="/login"> Sign in</Link></li>
+                        <li><Link href="/register">Sign up</Link></li>
                     </ul>
                 </nav>
                 </div>
