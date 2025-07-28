@@ -8,8 +8,8 @@ const  Navbar = () => {
     return(
         <Fragment>
             <header className="border-b-1">
-              <div className="w-[80%] max-w-7xl mx-auto">
-                <nav className="flex items-center justify-between">
+                <div className="w-[80%] max-w-7xl mx-auto">
+                <nav className="flex items-center justify-between ">
                      <Image src='/medium_logo.png' alt="logo" width={140} height={20}/>
                     <ul className="flex gap-10 justify-between text-sm text-[#242424]">
                         <li className="hidden md:block"><Link href='/'>Our Story</Link></li>
