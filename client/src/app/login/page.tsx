@@ -9,6 +9,23 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { EyeOff, Eye } from 'lucide-react';
 import { useForm } from 'react-hook-form';
+import z from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+
+// Define the Zod schema for the login 
+const loginSchema = z.object({
+  email: z.string().email('Invalid email address.').min(1, 'Email is required.'),
+  password: z.string()
+    .min(8, 'Password must be at least 8 characters.')
+    .regex(/[A-Z]/, 'Password must contain at least one uppercase letter.')
+    .regex(/[a-z]/, 'Password must contain at least one lowercase letter.')
+    .regex(/[0-9]/, 'Password must contain at least one number.')
+    .regex(/[^A-Za-z0-9]/, 'Password must contain at least one special character.'),
+    rememberMe: z.boolean().optional(),   // for checkbox
+});
+
+
+type LoginFormInputs = z.infer<typeof loginSchema>;
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -19,11 +36,13 @@ const Login = () => {
   }
 
 // initialize userForm with errors message
-  const { register, handleSubmit, formState: { errors }} = useForm();
+  const { register, handleSubmit, formState: { errors }} = useForm<LoginFormInputs>({
+  resolver: zodResolver(loginSchema),
+});
 
 
 // form submission handler
-  const handleOnClick = (data) => {
+  const handleOnSubmit = (data: LoginFormInputs) => {
       console.log('form data:', data)
       // here later we add api call or authentication logic later
   }
@@ -40,20 +59,15 @@ const Login = () => {
           </CardHeader>
 
           <CardContent className='space-y-6'>
-              <form onSubmit={handleSubmit(handleOnClick)} className='space-y-6'>
+              <form onSubmit={handleSubmit(handleOnSubmit)} className='space-y-6'>
                 <div className="space-y-2">
                   <Label htmlFor='email' className='ml-1'>Email</Label>
                   <Input id='email' type='email' placeholder='john@example.com' 
 
-                    {...register('email', {required: 'Email is required',
-                      pattern: {
-                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                        message: 'Invalid email address',
-                      }
-                    })}
+                    {...register('email')}
                   />
                   {errors.email && (
-                    <p className='text-red-500 text-xs mt-1'>{errors.email.message?.toString()}</p>
+                    <p className='text-red-500 text-sm mt-1'>{errors.email.message}</p>
                   )}
                 </div>
                 
@@ -61,8 +75,8 @@ const Login = () => {
               <div className="space-y-2">
                 <Label htmlFor='password'>Password</Label>
                 <div className="relative">
-                  <Input id='password' type={showPassword ? 'text' : 'password'} placeholder='**********' {...register('password', {required: 'Password is required'})} />
-                  <Button type='button' size='sm' className='absolute bottom-1  h-7 py-2 right-0 ' onClick={togglePasswordVisibiility}>
+                  <Input id='password' type={showPassword ? 'text' : 'password'} placeholder='**********' {...register('password')} />
+                  <Button type='button' size='sm' className='absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-gray-700 ' onClick={togglePasswordVisibiility}>
                     {showPassword ? (
                     <EyeOff className="h-4 w-4 text-gray-500" />
                   ) : (
@@ -70,7 +84,7 @@ const Login = () => {
                   )}
                   </Button>
                   {errors.password && (
-                    <p className='text-red-500 text-sm mt-1'>{errors.password.message?.toString()}</p>
+                    <p className='text-red-500 text-sm mt-1'>{errors.password.message}</p>
                   )}
                 </div>
               </div>
