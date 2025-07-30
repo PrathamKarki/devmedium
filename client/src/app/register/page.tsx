@@ -7,33 +7,21 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {  Card, CardHeader, CardFooter, CardTitle,  CardDescription, CardContent } from '@/components/ui/card';
 import Link from "next/link";
+import { useForm } from "react-hook-form";
+import z from "zod";
+import { required } from "zod/v4-mini";
 
 
 const Register = () => {
-    const [showPassword, setShowPassword] = useState(false);
+   
 
-    const [email, setEmail] = useState('');
+    const {register, handleSubmit, formState: {errors}} = useForm()
 
-    const [password, setPassword] = useState('');
-
-    const [confirmPassword, setConfirmPassword] = useState('');
-
-    const [name, setName] = useState('');
-
-
-    const togglePasswordVisibiility = () => {
-        setShowPassword((prev)=> !prev);
+    //form submission handler
+    const handleOnClick = (data) => {
+        console.log('form data:', data);
     }
-
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        console.log('Email: ', email);
-        console.log('Name:', name);
-        console.log('Password', password);
-        console.log('confirm Password', confirmPassword)
-
-    }
-
+  
 
     return(
         <main className="flex items-center justify-center min-h-screen bg-gray-100">
@@ -44,38 +32,47 @@ const Register = () => {
                 </CardHeader>
 
             <CardContent className="space-y-6">
-                <form action="#" className="space-y-6" >
+                <form action="#" className="space-y-6" onSubmit={handleSubmit(handleOnClick)} >
                     <div className="space-y-2">
-                        <Label htmlFor="name " className="ml-1">Full Name</Label>
-                        <Input type="name" id="name"  value={name} onChange={(e)=> setName(e.target.value)}/>
+                        <Label htmlFor="fullName" className="ml-1">Full Name</Label>
+                        <Input type="text" id="fullName"  {...register('fullName',  {required: 'Full name is required'})}/>
+                        {errors.fullName && (
+                            <p className="text-red-500 text-xs mt-1">{errors.fullName.message?.toString()}</p>
+                        )}
                     </div>
 
                     <div className="space-y-2">
                         <Label htmlFor="email">Email</Label>
-                        <Input type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+                        <Input type="email" id="email" {...register('email', {required: 'Email is required',
+                            pattern: {
+                                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                                message: 'Invalid email address'
+                            }
+                        })}/>
+                        {errors.email && (
+                            <p className="text-red-500 text-sm mt-1">{errors.email.message?.toString()}</p>
+                        )}
                     </div>
 
                     <div className="space-y-2">
                         <Label htmlFor="password">Password</Label>
                         <div className="relative">
-                            <Input type={showPassword ? 'text' : 'password'} id="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-                            <Button type="button" className="absolute bottom-1  h-7 py-2 right-0 " onClick={togglePasswordVisibiility}>{showPassword ? (
-                                <EyeOff className="h-4 w-4 text-gray-500"/>
-                            ): (
-                                <Eye className="h-4 w-4 text-gray-500"/>
-                            )}</Button>
+                            <Input type='password' id="password" {...register('password', {required: 'password is required'})} />
+                             {errors.password && (
+                    <p className='text-red-500 text-sm mt-1'>{errors.password.message?.toString()}</p>
+                  )}
+            
                         </div>
                     </div>
 
                     <div className="space-y-2">
                         <Label htmlFor="confirmPassword">Confirm Password</Label>
                         <div className="relative">
-                            <Input type="password" id="confirmPassword" value={confirmPassword} onChange={(e)=> setConfirmPassword(e.target.value)} />
-                            <Button className="absolute bottom-1 h-7 right-0" onClick={togglePasswordVisibiility}>{showPassword ? (
-                                <EyeOff className="h-5 w-4 text-gray-500"/>
-                            ):  (
-                                <Eye className="h-5 w-4 text-gray-500" />
-                            )}</Button>
+                            <Input type="password" id="confirmPassword" {...register('confirmPassword', {required: 'password is required'})} />
+                    {errors.confirmPassword && (
+                    <p className='text-red-500 text-sm mt-1'>{errors.confirmPassword.message?.toString()}</p>
+                  )}
+                           
                         </div>
                     </div>
 

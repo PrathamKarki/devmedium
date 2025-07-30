@@ -12,10 +12,10 @@ const  Navbar = () => {
                 <nav className="flex items-center justify-between ">
                      <Image src='/medium_logo.png' alt="logo" width={140} height={20}/>
                     <ul className="flex gap-10 justify-between text-sm text-[#242424]">
-                        <li className="hidden md:block"><Link href='/'>Our Story</Link></li>
-                        <li className="hidden md:block"><Link href="/">Write</Link></li>
-                        <li><Link href="/login"> Sign in</Link></li>
-                        <li><Link href="/register">Sign up</Link></li>
+                        <li className="hidden md:block"><Link href='/' className="hover:decoration-gray-400 hover:underline-offset-5 hover:underline">Our Story</Link></li>
+                        <li className="hidden md:block"><Link href="/" className="hover:decoration-gray-400 hover:underline-offset-5 hover:underline">Write</Link></li>
+                        <li><Link href="/login" className=" hover:underline-offset-5 hover:decoration-gray-400 hover:underline"> Sign in</Link></li>
+                        <li><Link href="/register" className="hover:decoration-gray-400 hover:underline-offset-5 hover:underline">Sign up</Link></li>
                     </ul>
                 </nav>
                 </div>

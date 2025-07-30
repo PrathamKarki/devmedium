@@ -8,31 +8,26 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { EyeOff, Eye } from 'lucide-react';
+import { useForm } from 'react-hook-form';
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
 
-  const [rememberMe, setRememberMe] = useState(false);
-
-  const [password, setPassword] = useState('');
-
-  const [email, setEmail ] = useState('');
-  
-  
 
   const togglePasswordVisibiility = () => {
     setShowPassword((prev) => !prev);
   }
-  
 
-  // submit form funciton
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("login details");
-    console.log("Email is: ", email);
-    console.log('Password is ', password);
-    alert('Form submitted!');
+// initialize userForm with errors message
+  const { register, handleSubmit, formState: { errors }} = useForm();
+
+
+// form submission handler
+  const handleOnClick = (data) => {
+      console.log('form data:', data)
+      // here later we add api call or authentication logic later
   }
+  
 
   return (
       <main className=' flex items-center justify-center min-h-screen  bg-gray-100 '>
@@ -45,17 +40,28 @@ const Login = () => {
           </CardHeader>
 
           <CardContent className='space-y-6'>
-              <form  onSubmit={handleSubmit}  className='space-y-6'>
+              <form onSubmit={handleSubmit(handleOnClick)} className='space-y-6'>
                 <div className="space-y-2">
                   <Label htmlFor='email' className='ml-1'>Email</Label>
-                  <Input id='email' type='email' placeholder='john@example.com' value={email} onChange={(e) => setEmail(e.target.value)}/>
+                  <Input id='email' type='email' placeholder='john@example.com' 
+
+                    {...register('email', {required: 'Email is required',
+                      pattern: {
+                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                        message: 'Invalid email address',
+                      }
+                    })}
+                  />
+                  {errors.email && (
+                    <p className='text-red-500 text-xs mt-1'>{errors.email.message?.toString()}</p>
+                  )}
                 </div>
                 
               {/* for password input field */}
               <div className="space-y-2">
                 <Label htmlFor='password'>Password</Label>
                 <div className="relative">
-                  <Input id='password' type={showPassword ? 'text' : 'password'} placeholder='**********' value={password} onChange={(e)=> setPassword(e.target.value)} />
+                  <Input id='password' type={showPassword ? 'text' : 'password'} placeholder='**********' {...register('password', {required: 'Password is required'})} />
                   <Button type='button' size='sm' className='absolute bottom-1  h-7 py-2 right-0 ' onClick={togglePasswordVisibiility}>
                     {showPassword ? (
                     <EyeOff className="h-4 w-4 text-gray-500" />
@@ -63,12 +69,15 @@ const Login = () => {
                     <Eye className="h-4 w-4 text-gray-500" />
                   )}
                   </Button>
+                  {errors.password && (
+                    <p className='text-red-500 text-sm mt-1'>{errors.password.message?.toString()}</p>
+                  )}
                 </div>
               </div>
               {/* remember me checkbox */}
               <div className="flex">
                 <div className="flex items-center space-x-2">
-                  <Checkbox  id='rememberMe' checked={rememberMe}/>
+                  <Checkbox  id='rememberMe'  {...register('rememberMe')}/>
                   <Label htmlFor='rememberMe' className='text-sm'>Remember me</Label>
                 </div>
               </div>
